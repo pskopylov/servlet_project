@@ -48,22 +48,17 @@ public class LocaleServlet extends HttpServlet {
     }
 
     private void translateLoginPage(HttpServletRequest request) {
-        try {
-            Properties properties = new Properties();
-            FileInputStream file = new FileInputStream("src/main/resources/" + requestLocale + ".properties");
-            properties.load(file);
-            request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
-            request.setAttribute("enterPassword", properties.getProperty("text.enterPassword"));
-            request.setAttribute("loginUser", properties.getProperty("text.loginUser"));
-            request.setAttribute("enterGuest", properties.getProperty("text.enterGuest"));
-            request.setAttribute("select" + Character.toUpperCase(requestLocale.charAt(0)) + requestLocale.charAt(1), "selected");
-            request.setAttribute("en", properties.getProperty("text.en"));
-            request.setAttribute("ru", properties.getProperty("text.ru"));
-            request.setAttribute("de", properties.getProperty("text.de"));
-            if (request.getAttribute("error") != null)
-                request.setAttribute("error", properties.getProperty("text.error"));
-        }catch (IOException ignored){
-        }
+        Properties properties = ReadProperties.getProperties(requestLocale);
+        request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
+        request.setAttribute("enterPassword", properties.getProperty("text.enterPassword"));
+        request.setAttribute("loginUser", properties.getProperty("text.loginUser"));
+        request.setAttribute("enterGuest", properties.getProperty("text.enterGuest"));
+        request.setAttribute("select" + Character.toUpperCase(requestLocale.charAt(0)) + requestLocale.charAt(1), "selected");
+        request.setAttribute("en", properties.getProperty("text.en"));
+        request.setAttribute("ru", properties.getProperty("text.ru"));
+        request.setAttribute("de", properties.getProperty("text.de"));
+        if (request.getAttribute("error") != null)
+            request.setAttribute("error", properties.getProperty("text.error"));
     }
 
     private boolean getCookie(HttpServletRequest request) {
