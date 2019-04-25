@@ -1,0 +1,81 @@
+package com.epam;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import java.io.*;
+import java.util.*;
+
+@WebServlet("/locale")
+public class LocaleServlet extends HttpServlet {
+    private Properties supportedLanguages;
+    private String requestLocale;
+    private String key = "locale";
+
+    public LocaleServlet() {
+        supportedLanguages = new Properties();
+        supportedLanguages.put("English", "en");
+        supportedLanguages.put("Deutsch", "de");
+        supportedLanguages.put("Russian", "ru");
+        requestLocale = (String) supportedLanguages.get("English");
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        if (!session.getAttributeNames().hasMoreElements()) {
+            if (!getCookie(request))
+                detectLocale(request);
+            translateLoginPage(request);
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        String locale = request.getParameter("selectLanguage");
+        requestLocale = locale != null ? locale : requestLocale;
+
+        Cookie cookie = new Cookie(key, requestLocale);
+        response.addCookie(cookie);
+
+        translateLoginPage(request);
+        request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
+    }
+
+    private void detectLocale(HttpServletRequest request) {
+        String locale = request.getLocale().getLanguage();
+        if (supportedLanguages.contains(locale))
+            requestLocale = locale;
+    }
+
+    private void translateLoginPage(HttpServletRequest request) {
+        try {
+            Properties properties = new Properties();
+            FileInputStream file = new FileInputStream("src/main/resources/" + requestLocale + ".properties");
+            properties.load(file);
+            request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
+            request.setAttribute("enterPassword", properties.getProperty("text.enterPassword"));
+            request.setAttribute("loginUser", properties.getProperty("text.loginUser"));
+            request.setAttribute("enterGuest", properties.getProperty("text.enterGuest"));
+            request.setAttribute("select" + Character.toUpperCase(requestLocale.charAt(0)) + requestLocale.charAt(1), "selected");
+            request.setAttribute("en", properties.getProperty("text.en"));
+            request.setAttribute("ru", properties.getProperty("text.ru"));
+            request.setAttribute("de", properties.getProperty("text.de"));
+            if (request.getAttribute("error") != null)
+                request.setAttribute("error", properties.getProperty("text.error"));
+        }catch (IOException ignored){
+        }
+    }
+
+    private boolean getCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(key)) {
+                    requestLocale = cookie.getValue();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
