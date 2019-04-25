@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Properties;
 
 @WebServlet("/redirect")
 public class RedirectServlet extends HttpServlet{
@@ -26,39 +27,16 @@ public class RedirectServlet extends HttpServlet{
             throws IOException, ServletException {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
+        Properties properties = ReadProperties.getProperties(findLocale(request));
         String login = session.getAttributeNames().nextElement();
 
         if (login.equals("Guest")) {
-            login = translateGuest(request);
+            login = properties.getProperty("text.guest");
             session.removeAttribute(login);
         }
-        request.setAttribute("text", createLoginText(request, login));
-        request.getRequestDispatcher("WEB-INF/logged.jsp").include(request, response);
-    }
-
-    private String createLoginText(HttpServletRequest request, String login) {
-        String locale = findLocale(request);
-
-        switch (locale) {
-            case "ru":
-                return "Вы зашли как <i>" + login + "</i>";
-            case "de":
-                return "Sie sind als <i>" + login + " </i>angemeldet";
-            default:
-                return "You are logged as <i>" + login + "</i>";
-        }
-    }
-
-    private String translateGuest(HttpServletRequest request){
-        String locale = findLocale(request);
-        switch (locale) {
-            case "ru":
-                return "Гость";
-            case "de":
-                return "Der Gast";
-            default:
-                return "Guest";
-        }
+        request.setAttribute("text", properties.getProperty("text.text").replaceAll("login", login));
+        request.setAttribute("logOut", properties.getProperty("text.logOut"));
+        request.getRequestDispatcher("WEB-INF/logged.jsp").forward(request, response);
     }
 
     private String findLocale(HttpServletRequest request) {

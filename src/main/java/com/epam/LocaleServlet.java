@@ -25,7 +25,7 @@ public class LocaleServlet extends HttpServlet {
         if (!session.getAttributeNames().hasMoreElements()) {
             if (!getCookie(request))
                 detectLocale(request);
-            translateLoginPage(request);
+            translatePage(request);
         }
     }
 
@@ -37,7 +37,7 @@ public class LocaleServlet extends HttpServlet {
         Cookie cookie = new Cookie(key, requestLocale);
         response.addCookie(cookie);
 
-        translateLoginPage(request);
+        translatePage(request);
         request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
     }
 
@@ -47,18 +47,21 @@ public class LocaleServlet extends HttpServlet {
             requestLocale = locale;
     }
 
-    private void translateLoginPage(HttpServletRequest request) {
+    private void translatePage(HttpServletRequest request) {
         Properties properties = ReadProperties.getProperties(requestLocale);
-        request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
-        request.setAttribute("enterPassword", properties.getProperty("text.enterPassword"));
-        request.setAttribute("loginUser", properties.getProperty("text.loginUser"));
-        request.setAttribute("enterGuest", properties.getProperty("text.enterGuest"));
-        request.setAttribute("select" + Character.toUpperCase(requestLocale.charAt(0)) + requestLocale.charAt(1), "selected");
-        request.setAttribute("en", properties.getProperty("text.en"));
-        request.setAttribute("ru", properties.getProperty("text.ru"));
-        request.setAttribute("de", properties.getProperty("text.de"));
-        if (request.getAttribute("error") != null)
-            request.setAttribute("error", properties.getProperty("text.error"));
+        if (properties != null) {
+            request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
+            request.setAttribute("enterPassword", properties.getProperty("text.enterPassword"));
+            request.setAttribute("loginUser", properties.getProperty("text.loginUser"));
+            request.setAttribute("enterGuest", properties.getProperty("text.enterGuest"));
+            request.setAttribute("select" + Character.toUpperCase(requestLocale.charAt(0)) + requestLocale.charAt(1), "selected");
+            request.setAttribute("en", properties.getProperty("text.en"));
+            request.setAttribute("ru", properties.getProperty("text.ru"));
+            request.setAttribute("de", properties.getProperty("text.de"));
+            request.setAttribute("logOut", requestLocale);
+            if (request.getAttribute("error") != null)
+                request.setAttribute("error", properties.getProperty("text.error"));
+        }
     }
 
     private boolean getCookie(HttpServletRequest request) {

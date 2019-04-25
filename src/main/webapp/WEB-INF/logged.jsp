@@ -8,7 +8,7 @@
         <center>
             <h3><font color=green face=arial>${text}</font></h3>
             <form action="log_out" method="post">
-                <input type="submit" value="Log out"><br/>
+                <input type="submit" value="${logOut}"><br/>
             </form>
         </center>
     </body>
