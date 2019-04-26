@@ -22,8 +22,8 @@ public class LogOutServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (session.getAttributeNames().hasMoreElements()) {
-            String name = session.getAttributeNames().nextElement();
-            session.removeAttribute(name);
+            String login = (String) session.getAttribute("login");
+            session.removeAttribute(login);
         }
         request.getRequestDispatcher("/locale").include(request, response);
         request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);

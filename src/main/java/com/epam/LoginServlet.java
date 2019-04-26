@@ -36,14 +36,14 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("/locale").include(request, response);
                 request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
             } else {
-                session.setAttribute(login, password);
+                session.setAttribute("login", login);
                 request.getRequestDispatcher("/locale").include(request, response);
                 request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
             }
         } else {
-            session.setAttribute("Guest", "guest");
+            session.setAttribute("login", "guest");
             request.getRequestDispatcher("/locale").include(request, response);
-            session.removeAttribute("Guest");
+            session.removeAttribute("login");
             request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
         }
     }

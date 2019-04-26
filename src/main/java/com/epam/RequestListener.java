@@ -27,7 +27,7 @@ public class RequestListener implements ServletRequestListener {
         if (!session.getAttributeNames().hasMoreElements()){
             requester = request.getContextPath();
         } else {
-            requester = session.getAttributeNames().nextElement();
+            requester = (String) session.getAttribute("login");
         }
         return requester;
     }

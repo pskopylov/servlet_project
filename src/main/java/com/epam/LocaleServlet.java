@@ -60,8 +60,8 @@ public class LocaleServlet extends HttpServlet {
             if (request.getAttribute("error") != null)
                 request.setAttribute("error", properties.getProperty("text.error"));
             if (session.getAttributeNames().hasMoreElements()) {
-                String login = session.getAttributeNames().nextElement();
-                if (login.equals("Guest"))
+                String login = (String) session.getAttribute("login");
+                if (login.equals("guest"))
                     login = properties.getProperty("text.guest");
                 request.setAttribute("text", properties.getProperty("text.loginText").replaceAll("login", login));
                 request.setAttribute("logOut", properties.getProperty("text.logOut"));
