@@ -21,12 +21,9 @@ public class LocaleServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        if (!session.getAttributeNames().hasMoreElements()) {
-            if (!getCookie(request))
-                detectLocale(request);
-            translatePage(request);
-        }
+        if (!getCookie(request))
+            detectLocale(request);
+        translatePage(request);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -38,7 +35,7 @@ public class LocaleServlet extends HttpServlet {
         response.addCookie(cookie);
 
         translatePage(request);
-        request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/login.jsp").include(request, response);
     }
 
     private void detectLocale(HttpServletRequest request) {
@@ -48,6 +45,7 @@ public class LocaleServlet extends HttpServlet {
     }
 
     private void translatePage(HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Properties properties = ReadProperties.getProperties(requestLocale);
         if (properties != null) {
             request.setAttribute("enterLogin", properties.getProperty("text.enterLogin"));
@@ -61,6 +59,13 @@ public class LocaleServlet extends HttpServlet {
             request.setAttribute("logOut", requestLocale);
             if (request.getAttribute("error") != null)
                 request.setAttribute("error", properties.getProperty("text.error"));
+            if (session.getAttributeNames().hasMoreElements()) {
+                String login = session.getAttributeNames().nextElement();
+                if (login.equals("Guest"))
+                    login = properties.getProperty("text.guest");
+                request.setAttribute("text", properties.getProperty("text.loginText").replaceAll("login", login));
+                request.setAttribute("logOut", properties.getProperty("text.logOut"));
+            }
         }
     }
 

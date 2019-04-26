@@ -12,11 +12,6 @@ public class LogOutServlet extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        processRequest(request, response);
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         processRequest(request, response);
@@ -30,7 +25,8 @@ public class LogOutServlet extends HttpServlet {
             String name = session.getAttributeNames().nextElement();
             session.removeAttribute(name);
         }
-        request.getRequestDispatcher("/locale").forward(request, response);
+        request.getRequestDispatcher("/locale").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
     }
 }
 

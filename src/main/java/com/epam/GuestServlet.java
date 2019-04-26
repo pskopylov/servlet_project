@@ -23,6 +23,8 @@ public class GuestServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         session.setAttribute("Guest", "guest");
-        request.getRequestDispatcher("/redirect").include(request, response);
+        request.getRequestDispatcher("/locale").include(request, response);
+        session.removeAttribute("Guest");
+        request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
     }
 }

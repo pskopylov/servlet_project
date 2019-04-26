@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 
-@WebFilter(filterName = "CharsetFilter", urlPatterns = {"/login", "/guest", "/locale"},
+@WebFilter(filterName = "CharsetFilter", urlPatterns = {"/login", "/guest", "/locale", "/log_out"},
         initParams = {@WebInitParam(name = "characterEncoding", value = "UTF-8")})
 public class CharsetFilter implements Filter {
 

@@ -33,9 +33,11 @@ public class LoginServlet extends HttpServlet {
                 || login.equals("Guest")) {
             request.setAttribute("error", "Error message");
             request.getRequestDispatcher("/locale").include(request, response);
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         } else {
             session.setAttribute(login, password);
-            request.getRequestDispatcher("/redirect").forward(request, response);
+            request.getRequestDispatcher("/locale").include(request, response);
+            request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
         }
     }
 }

@@ -16,9 +16,9 @@ public class MainServlet extends HttpServlet {
         HttpSession session = request.getSession();
         request.getRequestDispatcher("/locale").include(request, response);
         if (!session.getAttributeNames().hasMoreElements()) {
-            request.getRequestDispatcher("WEB-INF/login.jsp").include(request, response);
+            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
         } else {
-            request.getRequestDispatcher("/redirect").include(request, response);
+            request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
         }
     }
 }

@@ -5,6 +5,6 @@
         <title>Authorization</title>
     </head>
     <body>
-        <jsp:include page="/main" />
+        <jsp:forward page="/main" />
     </body>
 </html>
