@@ -20,10 +20,8 @@
                 <input type="text" name="login" value="" /><br/>  
                 ${enterPassword}:<br/> 
                 <input type="password" name="password" value="" /><br><br>
-                <input type="submit" value= "${loginUser}" /><br><br>
-            </form>
-            <form action="guest" method="post">
-                <input type="submit" value="${enterGuest}"/><br/>
+                <input type="submit" name="user" value="${loginUser}"/><br><br>
+                <input type="submit" name="guest" value="${enterGuest}"/><br/>
             </form>
             <br>
         </center>

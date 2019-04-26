@@ -27,16 +27,23 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html");
         HttpSession session = request.getSession();
 
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        if (login.length() < 1 || password.length() < 1 || (login.equals("admin") && !password.equals("pass"))
-                || login.equals("Guest")) {
-            request.setAttribute("error", "Error message");
-            request.getRequestDispatcher("/locale").include(request, response);
-            request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+        if (request.getParameter("user") != null) {
+            String login = request.getParameter("login");
+            String password = request.getParameter("password");
+            if (login.length() < 1 || password.length() < 1 || (login.equals("admin") && !password.equals("pass"))
+                    || login.equals("Guest")) {
+                request.setAttribute("error", "Error message");
+                request.getRequestDispatcher("/locale").include(request, response);
+                request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+            } else {
+                session.setAttribute(login, password);
+                request.getRequestDispatcher("/locale").include(request, response);
+                request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
+            }
         } else {
-            session.setAttribute(login, password);
+            session.setAttribute("Guest", "guest");
             request.getRequestDispatcher("/locale").include(request, response);
+            session.removeAttribute("Guest");
             request.getRequestDispatcher("/WEB-INF/logged.jsp").forward(request, response);
         }
     }
